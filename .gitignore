@@ -1,0 +1,4 @@
+hubspot.config.yml
+.DS_Store
+debug-input-deployment.sh
+test-deploy.sh
