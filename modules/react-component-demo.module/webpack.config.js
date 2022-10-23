@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 
-
 const hubspotConfig = ({ portal, autoupload } = {}) => {
   return {
     target: 'web',

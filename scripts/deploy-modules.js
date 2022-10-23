@@ -73,17 +73,22 @@ async function main() {
     // Check type (react template or default)
     let moduleLocation = './modules/' + moduleToDeploy;
     let metaFileLocation = `${moduleLocation}/meta.json`;
+    let isNpm = false;
 
     if (existsSync(moduleLocation + '/package.json')) {
       // Treat as build required process
-      await executeCommand(`cd ${moduleLocation} && npm run build`);
-      moduleLocation = './modules/' + moduleToDeploy + '/dist/modules/app.module';
+      isNpm = true;
+      await executeCommand(`cd ${moduleLocation} && npm run build`, [], { stream: true });
+      moduleLocation = './modules/' + moduleToDeploy + '/dist';
       metaFileLocation = './modules/' + moduleToDeploy + '/dist/modules/app.module/meta.json';
     }
 
     if (!isProd) {
       modifyJsonFile(metaFileLocation, {
-        label: 'DEV-' + metaFileContent.label
+        label: 'DEV-' + JSON.parse(readFileSync(metaFileLocation, 'utf-8')).label
+      });
+      modifyJsonFile(metaFileLocation, {
+        is_available_for_new_content: false
       });
     } else {
       modifyJsonFile(metaFileLocation, {
@@ -91,22 +96,20 @@ async function main() {
       });
     }
 
-    await executeCommand(
-      'hs',
-      [
-        'upload',
-        '--mode',
-        'publish',
-        moduleLocation,
-        'modules/' + (isProd ? '' : 'dev' + '/') + moduleToDeploy
-      ],
-      { stream: true }
-    );
+    let destination = 'modules/' + (isProd ? '' : 'dev-') + moduleToDeploy;
+
+    console.log(destination);
+    if (isNpm) {
+      destination = 'modules/' + (isProd ? '' : 'dev-') + moduleToDeploy.replace('.module', '');
+    }
+    await executeCommand(`cd ${moduleLocation} && hs upload . ${destination}`, [], {
+      stream: true
+    });
   }
 }
 
 function modifyJsonFile(path, override) {
-  const jsonFileContent = JSON.parse(readFileSync(path, 'utf-8'));
+  let jsonFileContent = JSON.parse(readFileSync(path, 'utf-8'));
   jsonFileContent = {
     ...jsonFileContent,
     ...override

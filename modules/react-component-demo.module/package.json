@@ -7,7 +7,7 @@
     "start": "webpack --watch --env autoupload --mode production",
     "dev": "webpack serve",
     "build": "rm -Rf dist && webpack --mode production",
-    "deploy": "rm -Rf dist && webpack --mode production && hs upload dist react-hub-component-demo",
+    "deploy": "rm -Rf dist && webpack --mode production && hs upload dist react-hub-components",
     "lint": "eslint src && prettier --list-different 'src/**/*.js' 'src/**/*.json'",
     "prettier:write": "prettier --wriste 'src/**/*.js' 'src/**/*.json'"
   },
