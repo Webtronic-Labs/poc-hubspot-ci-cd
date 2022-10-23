@@ -7,9 +7,11 @@ function App({ moduleData }) {
     moduleData,
   );
 
+  const currentDate = new Date().toISOString();
+
   return (
     <div className="header-main">
-      <p>This code is using react.</p>
+      <p>This code is using react directly. {currentDate}</p>
     </div>
   );
 }

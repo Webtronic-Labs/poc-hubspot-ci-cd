@@ -78,7 +78,8 @@ async function main() {
     if (existsSync(moduleLocation + '/package.json')) {
       // Treat as build required process
       isNpm = true;
-      await executeCommand(`cd ${moduleLocation} && npm run build`, [], { stream: true });
+      // This will also prevents installing all dependencies when not needed
+      await executeCommand(`cd ${moduleLocation} && npm i && npm run build`, [], { stream: true });
       moduleLocation = './modules/' + moduleToDeploy + '/dist';
       metaFileLocation = './modules/' + moduleToDeploy + '/dist/modules/app.module/meta.json';
     }
