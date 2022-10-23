@@ -1,5 +1,5 @@
 const { spawn } = require('child_process');
-const { readFileSync, writeFileSync } = require('fs');
+const { readFileSync, writeFileSync, existsSync } = require('fs');
 
 async function executeCommand(command, args = [], options = {}) {
   return new Promise((resolve, reject) => {
@@ -70,28 +70,25 @@ async function main() {
   console.log('Modules to deploy:', allChangedFolders);
 
   for (const moduleToDeploy of allChangedFolders) {
+    // Check type (react template or default)
+    let moduleLocation = './modules/' + moduleToDeploy;
+    let metaFileLocation = `${moduleLocation}/meta.json`;
+
+    if (existsSync(moduleLocation + '/package.json')) {
+      // Treat as build required process
+      await executeCommand(`cd ${moduleLocation} && npm run build`);
+      moduleLocation = './modules/' + moduleToDeploy + '/dist/modules/app.module';
+      metaFileLocation = './modules/' + moduleToDeploy + '/dist/modules/app.module/meta.json';
+    }
+
     if (!isProd) {
-      // modify meta to change display name for designers
-      const metaFileContent = JSON.parse(
-        readFileSync('./modules/' + moduleToDeploy + '/meta.json', 'utf-8')
-      );
-      metaFileContent.label = 'DEV-' + metaFileContent.label;
-
-      writeFileSync(
-        './modules/' + moduleToDeploy + '/meta.json',
-        JSON.stringify(metaFileContent, null, 2)
-      );
+      modifyJsonFile(metaFileLocation, {
+        label: 'DEV-' + metaFileContent.label
+      });
     } else {
-      // make it available to use if PROD, in case of dev, this should be done manually
-      const metaFileContent = JSON.parse(
-        readFileSync('./modules/' + moduleToDeploy + '/meta.json', 'utf-8')
-      );
-      metaFileContent.is_available_for_new_content = true;
-
-      writeFileSync(
-        './modules/' + moduleToDeploy + '/meta.json',
-        JSON.stringify(metaFileContent, null, 2)
-      );
+      modifyJsonFile(metaFileLocation, {
+        is_available_for_new_content: true
+      });
     }
 
     await executeCommand(
@@ -100,12 +97,22 @@ async function main() {
         'upload',
         '--mode',
         'publish',
-        './modules/' + moduleToDeploy,
-        'modules/' + (isProd ? '' : args[0] + '/') + moduleToDeploy
+        moduleLocation,
+        'modules/' + (isProd ? '' : 'dev' + '/') + moduleToDeploy
       ],
       { stream: true }
     );
   }
+}
+
+function modifyJsonFile(path, override) {
+  const jsonFileContent = JSON.parse(readFileSync(path, 'utf-8'));
+  jsonFileContent = {
+    ...jsonFileContent,
+    ...override
+  };
+
+  writeFileSync(path, JSON.stringify(jsonFileContent, null, 2));
 }
 
 main();
