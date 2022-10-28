@@ -4,10 +4,46 @@
     "min": 0,
     "max": 100,
     "display": "slider",
-    "label": "Starting number of reasons",
+    "label": "Price",
     "locked": false,
-    "name": "initial_count",
+    "name": "price",
     "required": false,
     "type": "number"
+  },
+  {
+    "name": "bg_color",
+    "label": "Background color",
+    "required": false,
+    "locked": false,
+    "type": "color",
+    "default": {
+      "color": "#ff0000",
+      "opacity": 100
+    }
+  },
+  {
+    "name": "text_color",
+    "label": "Text color",
+    "required": false,
+    "locked": false,
+    "type": "color",
+    "default": {
+      "color": "white",
+      "opacity": 100
+    }
+  },
+  {
+    "name": "text_position",
+    "label": "Image Position",
+    "required": false,
+    "locked": false,
+    "multiple": "true",
+    "display": "select",
+    "choices": [
+      ["right", "Image Left"],
+      ["left", "Text Left"]
+    ],
+    "type": "choice",
+    "default": "left"
   }
 ]
