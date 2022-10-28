@@ -21,6 +21,7 @@ function App({ moduleData }) {
       style={{
         'background-color': moduleData.bg_color.color,
         color: moduleData.text_color.color,
+        textAlign: moduleData.text_position,
       }}
     >
       <p>Today is {currentDate}</p>
