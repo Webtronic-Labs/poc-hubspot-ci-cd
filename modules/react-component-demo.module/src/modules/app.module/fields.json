@@ -17,7 +17,7 @@
     "locked": false,
     "type": "color",
     "default": {
-      "color": "#000000",
+      "color": "#FFFFFF",
       "opacity": 100
     }
   },
@@ -28,7 +28,7 @@
     "locked": false,
     "type": "color",
     "default": {
-      "color": "#FFFFFF",
+      "color": "#000000",
       "opacity": 100
     }
   },
@@ -37,10 +37,10 @@
     "label": "Image Position",
     "required": false,
     "locked": false,
-    "multiple": "true",
+    "multiple": "false",
     "display": "select",
     "choices": [
-      ["right", "Image Left"],
+      ["right", "Text right"],
       ["left", "Text Left"]
     ],
     "type": "choice",
