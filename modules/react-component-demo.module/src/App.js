@@ -12,6 +12,7 @@ function App({ moduleData }) {
   return (
     <div className="header-main">
       <p>This code is using react directly. {currentDate}</p>
+      <p>Input given: {moduleData.initial_count}</p>
     </div>
   );
 }
